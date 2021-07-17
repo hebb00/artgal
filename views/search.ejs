@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <%- include ('partials/head'); -%>
+  </head>
+  <body>
+    <%- include ('partials/navbar'); -%>
+
+    <div class="gallery container no-gutters mx-auto">
+      <div class="row text-center text-lg-left">
+        <% for( i = 0; i < pics.length ; i++){ %>
+        <div class="col-lg-3 col-md-3">
+          <div class="thumbnail">
+            <a href="d-block h-100 mb-4">
+              <img
+                src="<%= pics[i].path %>"
+                class="img-thumbnail img-fluid"
+                alt="pic"
+              />
+            </a>
+          </div>
+        </div>
+
+        <% } %>
+      </div>
+    </div>
+    <div class="container m-5 p-5"></div>
+
+    <footer class="footer">
+      <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
+    </footer>
+  </body>
+</html>

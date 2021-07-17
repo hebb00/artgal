@@ -9,25 +9,33 @@ const path = require("path");
 
 /* GET home page. */
 router.get("/", async function (req, res, next) {
-  searchPics = req.flash("val");
 
+router.get("/search", async function (req, res, next) {
+  searchPics = req.flash("val");
   if (searchPics.length != 0) {
     console.log(searchPics);
     pics = await searching(searchPics);
-  } else {
-    query = `SELECT id, name, type, path FROM images`;
+  }
+  res.render("search", { title: "search", pics: pics });
+});
+
+async function searching(type) {
+  myquery = `SELECT * FROM images WHERE type = '${type}'`;
+  rows = [];
     try {
-      var { rows } = await database.query(query);
+    var { rows } = await database.query(myquery);
+    var myPic = rows;
     } catch (error) {
       console.log(error);
     }
-    console.log(rows);
-    pics = rows;
+  return myPic;
   }
 
-  res.render("index", { title: "home", pics: pics });
+router.post("/search", function (req, res, next) {
+  console.log("post method search", req.body.searchValue);
+  req.flash("val", req.body.searchValue);
+  res.redirect("/search");
 });
-
 
 router.get("/signup", function (req, res, next) {
   res.render("signup", { title: "signup" });
