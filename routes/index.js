@@ -9,6 +9,16 @@ const path = require("path");
 
 /* GET home page. */
 router.get("/", async function (req, res, next) {
+  query = `SELECT id, name, type, path FROM images`;
+  try {
+    var { rows } = await database.query(query);
+  } catch (error) {
+    console.log(error);
+  }
+  console.log(rows);
+
+  res.render("index", { title: "home", pics: rows });
+});
 
 router.get("/search", async function (req, res, next) {
   searchPics = req.flash("val");
