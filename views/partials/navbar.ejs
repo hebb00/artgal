@@ -1,23 +1,63 @@
-
-<nav class="navbar navbar-expand-lg  navbar-light d-flex"style="background-color: #e3f2fd;">
-    <div class="collapse navbar-collapse">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link active" href="#">home</a>
-            <a class="nav-item nav-link" href="#"> profile</a>
-            <a class="nav-item nav-link" href="#"> explore</a>
-
-        </div>
-
+<nav
+  class="navbar navbar-expand-lg navbar-light d-flex"
+  style="background-color: #e3f2fd"
+>
+  <div class="collapse navbar-collapse">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link active" href="/">Explore</a>
+      <!-- <a class="nav-item nav-link" href="#"> Famous Artists</a> -->
+      <% if(user){ %>
+      <a class="nav-item nav-link" href="/profile"> Profile</a>
+      <% } %>
+      <form class="form-inline" method="POST" action="/search">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          name="searchValue"
+          placeholder="Search"
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">
+          Search
+        </button>
+      </form>
     </div>
+  </div>
 
-    <ul class="nav justify-content-end">
-        <li class="nav-item">
-            <a class="nav-link" href="#"> log in</a>
+  <ul class="nav justify-content-end">
+    <li class="nav-item">
+      <a href="/form" class="btn btn-outline-primary my-2 my-sm-0">
+        add image
+      </a>
+    </li>
+    <% if(user){ %>
+    <li class="nav-item dropdown">
+      <a
+        class="nav-link dropdown-toggle"
+        data-toggle="dropdown"
+        href="#"
+        role="button"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <%= user.name %></a
+      >
 
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#"> sign up</a>
-
-        </li>
-    </ul>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="/logout">log out</a>
+        <!-- <a class="dropdown-item" href="#">Another action</a>
+                  <a class="dropdown-item" href="#">Something else here</a>  -->
+        <!-- <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">log out</a> -->
+      </div>
+    </li>
+    <% } else{ %>
+    <li class="nav-item">
+      <a class="nav-link" href="/login"> log in</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/signup"> sign up</a>
+    </li>
+    <% } %>
+  </ul>
 </nav>
