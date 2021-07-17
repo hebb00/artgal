@@ -110,6 +110,43 @@ router.get("/logout", function (req, res, next) {
   res.render("logout", { title: "logout" });
 });
 
+router.get("/form", function (req, res, next) {
+  if (!req.session.user) {
+    res.redirect("/login");
+  }
+
+  res.render("form", { title: "bysell" });
 });
 
+router.post("/form", function (req, res, next) {
+  form = new formidable.IncomingForm();
+  form.parse(req, async function (err, fields, files) {
+    picName = files.image.name;
+    console.log(picName);
+    oldPath = files.image.path;
+    console.log(oldPath);
+
+    // const file = fs.readFileSync(oldpath);
+    newPath = "/home/heba/Desktop/myapp/artgal/public/images/pics/" + picName;
+    fs.rename(oldPath, newPath, function (err) {
+      if (err) throw err;
+});
+    imgPath = "images/pics/" + picName;
+
+    q = `INSERT INTO images (name, type, description, path, artist)
+        VALUES($1, $2, $3, $4, $5)`;
+    try {
+      await database.query(q, [
+        fields.picName,
+        fields.type,
+        fields.description,
+        imgPath,
+        req.session.user.id,
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+    res.redirect("/");
+  });
+});
 module.exports = router;
