@@ -71,6 +71,10 @@ async function logIn(body) {
   }
 }
 router.get("/profile", function (req, res, next) {
+  user = req.session.user;
+  console.log("profile", user);
+  res.render("profile", { title: "profile", user: user });
+});
 
 router.get("/logout", function (req, res, next) {
   req.session.destroy(function () {
