@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <%- include ('partials/head'); -%>
+  </head>
+  <body style="background-color: #f5f5f5">
+    <%- include ('partials/navbar'); -%>
+
+    <div class="container w-50">
+      <form class="myform m-5 p-5" method="POST" action="/login">
+        <label>email :</label>
+        <input class="form-control" type="text" name="email" />
+        <br />
+        <label>Password :</label>
+
+        <input class="form-control" type="password" name="pass" />
+        <br />
+        <div class="form-group form-check">
+          <input class="form-check-input" type="checkbox" name="check" />
+          <label class="form-check-label"> keep me logged in </label>
+        </div>
+        <br />
+        <button type="submit" id="log" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+    <div class="container m-5 p-5"></div>
+
+    <footer class="footer">
+      <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
+    </footer>
+  </body>
+</html>
