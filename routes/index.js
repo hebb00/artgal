@@ -1,9 +1,33 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
+var bcrypt = require("bcrypt");
 var database = require("./database");
 var formidable = require("formidable");
 
+var fs = require("fs");
+const path = require("path");
+
 /* GET home page. */
+router.get("/", async function (req, res, next) {
+  searchPics = req.flash("val");
+
+  if (searchPics.length != 0) {
+    console.log(searchPics);
+    pics = await searching(searchPics);
+  } else {
+    query = `SELECT id, name, type, path FROM images`;
+    try {
+      var { rows } = await database.query(query);
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(rows);
+    pics = rows;
+  }
+
+  res.render("index", { title: "home", pics: pics });
+});
+
 
 router.get("/signup", function (req, res, next) {
   res.render("signup", { title: "signup" });

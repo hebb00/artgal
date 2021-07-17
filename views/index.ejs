@@ -1,1 +1,93 @@
-hello world
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <%- include ('partials/head'); -%>
+  </head>
+  <body>
+    <%- include ('partials/navbar'); -%>
+    <div id="demo" class="carousel slide" data-ride="carousel">
+      <ul class="carousel-indicators">
+        <li data-target="#theCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#theCarousel" data-slide-to="1"></li>
+        <li data-target="#theCarousel" data-slide-to="2"></li>
+      </ul>
+      <div class="carousel-inner" style="height: 400px">
+        <div
+          class="carousel-item active"
+          style="
+            height: 400px;
+            background-position: center;
+            background-size: cover;
+            background-image: url('images/ww.jpeg');
+          "
+        >
+          <div class="carousel-caption ml-auto mr-auto">
+            <p>
+              <a href="#" id="mybtn" class="btn btn-primary btn-sm"
+                >download picture</a
+              >
+            </p>
+            <p>
+              HI hooman LOOK AT ME . YES! im a pretty cat dont u think? WAIT
+              ,pet me hooman please XD
+            </p>
+          </div>
+        </div>
+        <div
+          class="carousel-item"
+          style="
+            height: 400px;
+            background-position: center;
+            background-size: cover;
+            background-image: url('images/ss.jpeg');
+          "
+        ></div>
+        <div
+          class="carousel-item"
+          style="
+            height: 400px;
+            background-position: center;
+            background-size: cover;
+            background-image: url('images/sm.jpg');
+          "
+        >
+          <div class="carousel-caption ml-auto mr-auto">
+            <p>im just a depressed kitten looking for food</p>
+            <p><a href="#" class="btn btn-primary btn-sm">articles</a></p>
+          </div>
+        </div>
+      </div>
+      <a class="carousel-control-prev" href="#demo" data-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </a>
+      <a class="carousel-control-next" href="#demo" data-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </a>
+    </div>
+
+    <div class="gallery container no-gutters mx-auto">
+      <div class="row text-center text-lg-left">
+        <% for( i = 0; i < pics.length ; i++){ %>
+        <div class="col-lg-3 col-md-3">
+          <div class="thumbnail">
+            <a href="d-block h-100 mb-4">
+              <img
+                src="<%= pics[i].path %>"
+                class="img-thumbnail img-fluid"
+                alt="pic"
+              />
+            </a>
+          </div>
+        </div>
+
+        <% } %>
+      </div>
+    </div>
+    <div class="container m-5 p-5"></div>
+
+    <footer class="footer">
+      <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
+    </footer>
+  </body>
+</html>
