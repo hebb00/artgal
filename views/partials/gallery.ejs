@@ -1,0 +1,23 @@
+<div class="gallery container no-gutters mx-auto m-5">
+  <div class="row text-center text-lg-left">
+    <% for( i = 0; i < pics.length ; i++){ %>
+    <div class="col-lg-3 col-md-3">
+      <div class="thumbnail">
+        <a href="/image/<%= pics[i].id %>">
+          <img
+            src="<%= pics[i].path %>"
+            class="img-thumbnail img-fluid mb-4"
+            alt="pic"
+            style="
+              height: 300px;
+              background-position: center;
+              background-size: cover;
+            "
+          />
+        </a>
+      </div>
+    </div>
+
+    <% } %>
+  </div>
+</div>
