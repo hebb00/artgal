@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <%- include ('partials/head'); -%>
+  </head>
+  <body>
+    <%- include ('partials/navbar'); -%>
+    <div class="row">
+      <div class="col-6">
+        <div class="container m-5 p-5">
+          <img
+            style="
+              height: 400px;
+              background-position: center;
+              background-size: cover;
+            "
+            src="/<%= photo[0].path %>"
+            alt="pic"
+          />
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="container m-5 p-5">
+          <h2>painting info</h2>
+          <h3>BY: <%= photo[0].artistname %></h3>
+          <h3><%= photo[0].name %></h3>
+          <p><%= photo[0].description%></p>
+          <form
+            method="POST"
+            action="/delete/<%= photo[0].id %>"
+            enctype="multipart/form-data"
+          >
+            <button class="btn btn-primary" type="submit">DELETE</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
+    </footer>
+  </body>
+</html>

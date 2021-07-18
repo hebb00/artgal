@@ -115,7 +115,21 @@ async function logIn(body) {
 router.get("/profile", function (req, res, next) {
   user = req.session.user;
   console.log("profile", user);
-  res.render("profile", { title: "profile", user: user });
+
+router.get("/image/:id", async function (req, res, next) {
+  var id = req.params.id;
+  console.log("its the pic id", id);
+  pic = `SELECT images.id, images.name, type , path, users.name as artistName FROM images join users ON
+       users.id = images.artist WHERE images.id = '${id}'`;
+  rows = [];
+  try {
+    var { rows } = await database.query(pic);
+  } catch (error) {
+    console.log(error);
+  }
+  console.log(rows[0]);
+
+  res.render("image", { title: "image", photo: rows });
 });
 
 router.get("/logout", function (req, res, next) {
