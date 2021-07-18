@@ -181,4 +181,15 @@ router.post("/form", function (req, res, next) {
     res.redirect("/");
   });
 });
+router.post("/delete/:id", async function (req, res, next) {
+  var id = req.params.id;
+  console.log(id, "deleted pic id");
+  remove = `DELETE FROM images WHERE id = ${id} `;
+  try {
+    await database.query(remove);
+  } catch (error) {
+    console.log(error);
+  }
+  res.redirect("/profile");
+});
 module.exports = router;
