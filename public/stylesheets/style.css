@@ -1,8 +1,17 @@
+html,
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  min-height: 100vh;
 }
 
 a {
-  color: #00B7FF;
+  color: #00b7ff;
+}
+
+.gallery img.img-thumbnail {
+  height: 200px;
+  object-fit: cover;
+}
+.gallery .thumbnail {
+  position: relative;
 }
