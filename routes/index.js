@@ -26,6 +26,7 @@ router.get("/search", async function (req, res, next) {
     console.log(searchPics);
     pics = await searching(searchPics);
   }
+
   res.render("search", { title: "search", pics: pics });
 });
 
@@ -37,11 +38,11 @@ async function searching(type) {
   try {
     var { rows } = await database.query(myquery);
     var myPic = rows;
-    } catch (error) {
-      console.log(error);
-    }
-  return myPic;
+  } catch (error) {
+    console.log(error);
   }
+  return myPic;
+}
 
 router.post("/search", function (req, res, next) {
   console.log("post method search", req.body.searchValue);
@@ -114,7 +115,7 @@ async function logIn(body) {
     return null;
   }
 }
-router.get("/profile", function (req, res, next) {
+router.get("/profile", async function (req, res, next) {
   user = req.session.user;
   console.log("profile", user);
   query = `SELECT id, name, type, path FROM images WHERE artist = ${user.id}`;
@@ -158,7 +159,7 @@ router.get("/form", function (req, res, next) {
     res.redirect("/login");
   }
 
-  res.render("form", { title: "bysell" });
+  res.render("form", { title: "upload" });
 });
 
 router.post("/form", function (req, res, next) {
@@ -173,7 +174,7 @@ router.post("/form", function (req, res, next) {
     newPath = "/home/heba/Desktop/myapp/artgal/public/images/pics/" + picName;
     fs.rename(oldPath, newPath, function (err) {
       if (err) throw err;
-});
+    });
     imgPath = "images/pics/" + picName;
 
     q = `INSERT INTO images (name, type, description, path, artist)
