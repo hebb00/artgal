@@ -30,9 +30,11 @@ router.get("/search", async function (req, res, next) {
 });
 
 async function searching(type) {
-  myquery = `SELECT * FROM images WHERE type = '${type}'`;
+  myquery = `SELECT * , users.name  FROM images JOIN users ON images.artist = users.id WHERE
+           (type LIKE '%${type}%' OR images.name LIKE '%${type}%' OR description LIKE '% ${type}%' OR
+             users.name LIKE '%${type}%')`;
   rows = [];
-    try {
+  try {
     var { rows } = await database.query(myquery);
     var myPic = rows;
     } catch (error) {
