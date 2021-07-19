@@ -4,6 +4,9 @@
 >
   <div class="collapse navbar-collapse">
     <div class="navbar-nav">
+      <a class="navbar-brand" href="/">
+        <img src="/images/ICON.png" width="30" height="30" alt="" />
+      </a>
       <a class="nav-item nav-link active" href="/">Explore</a>
       <!-- <a class="nav-item nav-link" href="#"> Famous Artists</a> -->
       <% if(user){ %>
@@ -17,32 +20,6 @@
           placeholder="Search"
           aria-label="Search"
         />
-         <a
-            class="nav-link dropdown-toggle"
-            data-toggle="dropdown"
-            href="#"
-            role="button"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            search for</a
-          >
-
-          <div class="dropdown-menu p-2">
-            <div
-              class="form-group form-check dropdown-item justify-content-start"
-            >
-              <input class="form-check-input" type="checkbox" name="type" />
-              <label class="form-check-label"> type </label>
-            </div>
-            <div
-              class="form-group form-check dropdown-item justify-content-start"
-            >
-              <input class="form-check-input" type="checkbox" name="artist" />
-              <label class="form-check-label"> artist </label>
-            </div>
-          </div>
-        </li> -->
         <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">
           Search
         </button>
