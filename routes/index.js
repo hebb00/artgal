@@ -117,6 +117,15 @@ async function logIn(body) {
 router.get("/profile", function (req, res, next) {
   user = req.session.user;
   console.log("profile", user);
+  query = `SELECT id, name, type, path FROM images WHERE artist = ${user.id}`;
+  try {
+    var { rows } = await database.query(query);
+  } catch (error) {
+    console.log(error);
+  }
+  console.log(rows);
+  res.render("profile", { title: "profile", user: user, pics: rows });
+});
 
 router.get("/image/:id", async function (req, res, next) {
   var id = req.params.id;
