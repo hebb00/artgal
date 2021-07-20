@@ -31,7 +31,7 @@ router.get("/search", async function (req, res, next) {
 });
 
 async function searching(type) {
-  myquery = `SELECT * , users.name  FROM images JOIN users ON images.artist = users.id WHERE
+  myquery = `SELECT images.id as id, images.path as path, images.name as name, users.name  FROM images JOIN users ON images.artist = users.id WHERE
            (type LIKE '%${type}%' OR images.name LIKE '%${type}%' OR description LIKE '% ${type}%' OR
              users.name LIKE '%${type}%')`;
   rows = [];
@@ -131,7 +131,7 @@ router.get("/profile", async function (req, res, next) {
 router.get("/image/:id", async function (req, res, next) {
   var id = req.params.id;
   console.log("its the pic id", id);
-  pic = `SELECT images.id, images.name, type , path, users.name as artistName FROM images join users ON
+  pic = `SELECT images.id, images.name, type, path, users.name as artistName FROM images join users ON
        users.id = images.artist WHERE images.id = '${id}'`;
   rows = [];
   try {
@@ -139,7 +139,7 @@ router.get("/image/:id", async function (req, res, next) {
   } catch (error) {
     console.log(error);
   }
-  console.log(rows[0]);
+  console.log(rows);
 
   res.render("image", { title: "image", photo: rows });
 });
@@ -169,7 +169,7 @@ router.post("/form", function (req, res, next) {
     console.log(picName);
     oldPath = files.image.path;
     console.log(oldPath);
-
+    console.log(req.session.user.id, "digital user");
     // const file = fs.readFileSync(oldpath);
     newPath = "/home/heba/Desktop/myapp/artgal/public/images/pics/" + picName;
     fs.rename(oldPath, newPath, function (err) {
@@ -187,10 +187,20 @@ router.post("/form", function (req, res, next) {
         imgPath,
         req.session.user.id,
       ]);
+      info = `SELECT * FROM images WHERE name = '${fields.picName}' AND
+           artist = '${req.session.user.id}'`;
+      rows = [];
+      try {
+        var { rows } = await database.query(info);
+        var picid = rows[0].id;
+        console.log(picid);
+      } catch (error) {
+        console.log(error);
+      }
     } catch (error) {
       console.log(error);
     }
-    res.redirect("/");
+    res.redirect("/image/" + picid);
   });
 });
 router.post("/delete/:id", async function (req, res, next) {
@@ -204,4 +214,38 @@ router.post("/delete/:id", async function (req, res, next) {
   }
   res.redirect("/profile");
 });
+
+router.get("/edit/:id", async function (req, res, next) {
+  var id = req.params.id;
+  query = `SELECT id, name, type, path, description FROM images WHERE id = '${id}'`;
+  try {
+    var { rows } = await database.query(query);
+  } catch (error) {
+    console.log(error);
+  }
+  console.log(rows, "look for description");
+
+  res.render("edit", { title: "edit", img: rows, id: id });
+});
+
+router.post("/edit/:id", async function (req, res, next) {
+  var id = req.params.id;
+  console.log(id, "edit id");
+  form = new formidable.IncomingForm();
+  form.parse(req, async function (err, fields, files) {
+    var newName = fields.picName;
+    var newType = fields.type;
+    var newDescription = fields.description;
+    console.log(newName, "my new name is");
+    update = `UPDATE images SET name = '${newName}', type = '${newType}',
+    description = '${newDescription}' WHERE id = ${id} `;
+    try {
+      await database.query(update);
+    } catch (error) {
+      console.log(error);
+    }
+    res.redirect("/image/" + id);
+  });
+});
+
 module.exports = router;
