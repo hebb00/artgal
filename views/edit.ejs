@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <%- include ('partials/head'); -%>
+  </head>
+  <body style="background-color: #f5f5f5">
+    <%- include ('partials/navbar'); -%>
+    <div class="row">
+      <div class="col-5 m-5">
+        <div>
+          <img
+            style="
+              height: 400px;
+              background-position: center;
+              background-size: cover;
+            "
+            src="/<%= img[0].path %>"
+            alt="pic"
+          />
+        </div>
+        <br />
+      </div>
+
+      <div class="col-5">
+        <form
+          class="myform m-5 p-5"
+          enctype="multipart/form-data"
+          method="POST"
+          action="/edit/<%= id %>"
+        >
+          <label>Name </label>
+          <input
+            class="form-control"
+            value="<%= img[0].name %>"
+            type="text"
+            name="picName"
+          />
+          <br />
+
+          <label>type</label>
+          <input
+            class="form-control"
+            type="text"
+            name="type"
+            value="<%= img[0].type %>"
+          />
+          <br />
+          <label>description :</label>
+          <textarea class="form-control" type="text" name="description">
+             <%= img[0].description %>
+          </textarea>
+          <br />
+          <div>
+            <button type="submit" id="log" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="container m-5 p-5"></div>
+
+    <footer class="footer">
+      <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
+    </footer>
+  </body>
+</html>
