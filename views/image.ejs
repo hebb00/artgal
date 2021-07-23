@@ -26,19 +26,49 @@
           <h3>BY: <%= photo[0].artistname %></h3>
           <h3><%= photo[0].name %></h3>
           <p><%= photo[0].description%></p>
-          <form
-            method="POST"
-            action="/delete/<%= photo[0].id %>"
-            enctype="multipart/form-data"
+          <% if(userid == photo[0].artist){ %>
+
+          <br />
+          <a href="/edit/<%= photo[0].id%>" class="btn btn-primary">Modify </a>
+          <button
+            type="button"
+            class="btn btn-danger"
+            data-toggle="modal"
+            data-target="#deleteModal"
           >
-            <button class="btn btn-primary" type="submit">DELETE</button>
-          </form>
+            Delete
+          </button>
+          <% } %>
         </div>
       </div>
     </div>
 
-    <footer class="footer">
-      <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
-    </footer>
+    <div class="modal" id="deleteModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <p>Are you sure you want to delete this picture?</p>
+          </div>
+          <div class="modal-footer">
+            <form
+              method="POST"
+              action="/delete/<%= photo[0].id %>"
+              enctype="multipart/form-data"
+            >
+              <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="footer"><%- include ('partials/footer'); -%></footer>
+    <%- include ('partials/script'); -%>
   </body>
 </html>
