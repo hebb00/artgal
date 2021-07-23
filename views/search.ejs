@@ -5,7 +5,13 @@
     <%- include ('partials/head'); -%>
   </head>
   <body>
-    <%- include ('partials/navbar'); -%> <%- include('partials/gallery'); -%>
+    <%- include ('partials/navbar'); -%> <% if (pics.length != 0){ %>
+
+    <div class="m-2 p-2">
+      <h2>SEARCH RESULTS:</h2>
+      <hr />
+    </div>
+    <% } %> <%- include('partials/gallery'); -%>
 
     <div class="container m-5 p-5">
       <% if (pics.length == 0){ %>
@@ -13,8 +19,7 @@
 
       <% } %>
     </div>
-    <div class="container m-5 p-5"></div>
-    <div class="container m-5 p-5"></div>
+    <div class="container m-4 p-4"></div>
 
     <footer class="footer">
       <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
