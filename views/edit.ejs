@@ -38,13 +38,13 @@
           />
           <br />
 
-          <label>type</label>
-          <input
-            class="form-control"
-            type="text"
-            name="type"
-            value="<%= img[0].type %>"
-          />
+          <label>Select type</label>
+          <select name="type" class="form-control">
+            <option value="sketch">sketch</option>
+            <option value="oil painting">oil painting</option>
+            <option value="digital art">digital art</option>
+            <option value="other">other</option>
+          </select>
           <br />
           <label>description :</label>
           <textarea class="form-control" type="text" name="description">

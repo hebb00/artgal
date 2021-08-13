@@ -4,37 +4,58 @@
     <title><%= title %></title>
     <%- include ('partials/head'); -%>
   </head>
-  <body style="background-color:#f5f5f5;">
+  <body style="background-color: #f5f5f5">
     <%- include ('partials/navbar'); -%>
     <div class="container w-50">
-      <form class="myform m-5 p-5" enctype="multipart/form-data"  method="POST" action="/form">
+      <form
+        class="myform m-5 p-5"
+        enctype="multipart/form-data"
+        method="POST"
+        action="/form"
+      >
         <label>Name </label>
-        <input  class="form-control" placeholder="name"  type="name" name="picName" />
+        <input
+          class="form-control"
+          placeholder="name"
+          type="name"
+          name="picName"
+        />
         <br />
-
-        <label>type</label>
-        <input   class="form-control" placeholder="type" type="text" name="type" />
+        <label>Select type</label>
+        <select name="type" class="form-control">
+          <option value="sketch">sketch</option>
+          <option value="oil painting">oil painting</option>
+          <option value="digital art">digital art</option>
+          <option value="other">other</option>
+        </select>
         <br />
         <label>description :</label>
-        <textarea  class="form-control" placeholder="des" type="text" name="description" ></textarea>
-        <br/>
+        <textarea
+          class="form-control"
+          placeholder="image description"
+          type="text"
+          name="description"
+        ></textarea>
+        <br />
 
         <div>
-          <label >Select image:</label>
-          <br/>
+          <label>Select image:</label>
+          <br />
 
-          <input style="margin-bottom:15px;" type="file" accept="image/*" name="image">
+          <input
+            style="margin-bottom: 15px"
+            type="file"
+            accept="image/*"
+            name="image"
+          />
         </div>
         <button type="submit" id="log" class="btn btn-primary">Submit</button>
       </form>
     </div>
-    <div class="container m-5 p-5">
-
-    </div>
+    <div class="container m-5 p-5"></div>
 
     <footer class="footer">
-      <%- include ('partials/footer'); -%> 
-      <%- include ('partials/script'); -%>
+      <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
     </footer>
   </body>
 </html>
