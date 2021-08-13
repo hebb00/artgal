@@ -4,28 +4,26 @@
     <title><%= title %></title>
     <%- include ('partials/head'); -%>
   </head>
-  <body style="background-color:#f5f5f5;">
+  <body style="background-color: #f5f5f5">
     <%- include ('partials/navbar'); -%>
 
     <div class="container w-50">
       <form class="myform m-5 p-5" method="POST" action="/signup">
         <label>Name :</label>
-        <input  class="form-control"  type="name" name="user" />
+        <input class="form-control" type="name" name="user" />
         <br />
 
         <label>email :</label>
-        <input   class="form-control" type="text" name="email" />
+        <input class="form-control" type="text" name="email" />
         <br />
         <label>Password :</label>
 
-        <input  class="form-control"  type="password" name="pass" />
-        <br/>
+        <input class="form-control" type="password" name="pass" />
+        <br />
         <button type="submit" id="log" class="btn btn-primary">Submit</button>
       </form>
     </div>
-    <div class="container m-5 p-5">
-
-    </div>
+    <div class="container m-3 p-3"></div>
 
     <footer class="footer">
       <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>

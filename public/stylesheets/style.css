@@ -7,11 +7,3 @@ body {
 a {
   color: #00b7ff;
 }
-
-.gallery img.img-thumbnail {
-  height: 200px;
-  object-fit: cover;
-}
-.gallery .thumbnail {
-  position: relative;
-}

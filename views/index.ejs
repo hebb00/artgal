@@ -4,7 +4,7 @@
     <title><%= title %></title>
     <%- include ('partials/head'); -%>
   </head>
-  <body>
+  <body style="background-color: #f5f5f5">
     <%- include ('partials/navbar'); -%>
     <div id="demo" class="carousel slide" data-ride="carousel">
       <ul class="carousel-indicators">
@@ -19,7 +19,7 @@
             height: 400px;
             background-position: center;
             background-size: cover;
-            background-image: url('images/ww.jpeg');
+            background-image: url('images/pics/sun.webp');
           "
         >
           <div class="carousel-caption ml-auto mr-auto">
@@ -32,7 +32,7 @@
             height: 400px;
             background-position: center;
             background-size: cover;
-            background-image: url('images/ss.jpeg');
+            background-image: url('images/pics/aaa.jpg');
           "
         ></div>
         <div
@@ -41,7 +41,7 @@
             height: 400px;
             background-position: center;
             background-size: cover;
-            background-image: url('images/sm.jpg');
+            background-image: url('images/pics/flower.jpg');
           "
         >
           <div class="carousel-caption ml-auto mr-auto">
@@ -59,10 +59,11 @@
 
     <%- include('partials/gallery'); -%>
 
-    <div class="container m-5 p-5"></div>
+    <div class="container m-2 p-2"></div>
 
     <footer class="footer">
       <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
     </footer>
+  <!-- <script src="javascripts/javascript.js"></script> -->
   </body>
 </html>
