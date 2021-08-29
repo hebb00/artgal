@@ -4,51 +4,23 @@
     <title><%= title %></title>
     <%- include ('partials/head'); -%>
   </head>
-  <body style="background-color:#f5f5f5;">
+  <body style="background-color: #f5f5f5">
     <%- include ('partials/navbar'); -%>
 
-    <div class="jumbotron jumbotron-fluid " style="height:150px;padding: 0;">
-        <div style="margin-left: 11%;margin-bottom: 0;padding-top: 120px;">
-            <a  href="#" style="margin-left: 2%;"> edit</a>
-<!-- 
-            <div class="nav justify-content-center">
-                <a  class=" nav-link active"href="#" > my gallary</a>
-                <a class="nav-link " href="#"> about</a>
-                <a class="nav-link "href="#"> my favorite</a>
-            </div> -->
-
-            <nav class="nav-fill" style="margin-left: 0px;">
-                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                  <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">My Gallary</a>
-                  <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">My Favorite</a>
-                  <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">About</a>
-                </div>
-              </nav>
-              <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">kkkkkkkkkkkkkk</div>
-                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
-                <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
-              </div>
-
-        </div>
-
+    <div
+      class="jumbotron jumbotron-fluid"
+      style="height: 150px; padding-bottom: 0%; margin-bottom: 0%"
+    >
+      <h1 class="m-3">MY GALLERY</h1>
     </div>
-    
-    <div class=" container p-5" style="position: relative;margin-bottom:0px ;margin-left:20px ;">
-        <div >
-            <img src="/images/sm.jpg" alt="profile-image" style="border-radius: 50%; height: 150px; width: 150px;position: absolute;top: -105px;left: 0px;"/>
-        </div>
 
-    </div>
-    <div class="container m-5 p-5">
-
-    </div>
     <%- include('partials/gallery'); -%>
 
+    <div class="container m-5 p-5"></div>
+    <div class="container m-5 p-5"></div>
 
     <footer class="footer">
-      <%- include ('partials/footer'); -%> 
-      <%- include ('partials/script'); -%>
+      <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
     </footer>
   </body>
 </html>
