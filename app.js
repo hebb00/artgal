@@ -8,7 +8,8 @@ var flash = require("connect-flash");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-
+var artRouter = require("./routes/art");
+const { DatabaseError } = require("pg");
 var app = express();
 
 // view engine setup
@@ -29,17 +30,9 @@ app.use(
   })
 );
 
-app.use(function (req, res, next) {
-  if (!req.session.user && req.cookies.user) {
-    req.session.user = req.cookies.user;
-  }
-  res.locals = {
-    user: req.session.user,
-  };
-  return next();
-});
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/art", artRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

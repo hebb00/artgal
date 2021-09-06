@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <%- include ('partials/head'); -%>
+  </head>
+  <body>
+    <%- include ('partials/navbar'); -%>
+    <div class="container w-50">
+      <form
+        class="myform m-5 p-5"
+        enctype="multipart/form-data"
+        method="POST"
+        action="/form"
+      >
+        <label>Article Name </label>
+        <input
+          class="form-control"
+          placeholder="name"
+          type="name"
+          name="picName"
+        />
+        <br />
+        <label>Article:</label>
+        <textarea
+          class="form-control"
+          placeholder="image description"
+          type="text"
+          name="description"
+        ></textarea>
+        <br />
+
+        <div>
+          <label>Select image:</label>
+          <br />
+
+          <input
+            style="margin-bottom: 15px"
+            type="file"
+            accept="image/*"
+            name="image"
+          />
+        </div>
+        <button type="submit" id="log" class="btn btn-primary">ADD</button>
+      </form>
+    </div>
+    <div class="container m-5 p-5"></div>
+
+    <footer class="footer">
+      <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
+    </footer>
+  </body>
+</html>
