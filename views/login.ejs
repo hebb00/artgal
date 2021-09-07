@@ -4,31 +4,38 @@
     <title><%= title %></title>
     <%- include ('partials/head'); -%>
   </head>
-  <body style="background-color: #f5f5f5">
+  <body>
     <%- include ('partials/navbar'); -%>
-
-    <div class="container w-50">
-      <form class="myform m-5 p-5" method="POST" action="/login">
-        <label>email :</label>
-        <input class="form-control" type="text" name="email" />
-        <br />
-        <label>Password :</label>
-
-        <input class="form-control" type="password" name="pass" />
-        <br />
-        <div class="form-group form-check">
-          <input class="form-check-input" type="checkbox" name="check" />
-          <label class="form-check-label"> keep me logged in </label>
-          <% if (msg) { %>
-          <small class="form-text" style="color: red"><%= msg %></small>
-          <% } %>
+    <div class="container gx-3 gy-2 align-items-center my-5 py-5 w-50">
+      <form method="POST" action="/login">
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">UserName:</label>
+          <div class="col-sm-8">
+            <input class="form-control" type="name" name="user" />
+          </div>
         </div>
-        <br />
-        <button type="submit" id="log" class="btn btn-primary">Submit</button>
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">Password:</label>
+          <div class="col-sm-8">
+            <input class="form-control" type="password" name="pass" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-10 offset-sm-2">
+            <div class="form-check">
+              <label class="form-check-label">keep me logged in </label>
+              <input class="form-check-input" type="checkbox" name="check" />
+              <% if (msg) { %>
+              <small class="form-text" style="color: red"><%= msg %></small>
+              <% } %>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary" type="submit">Submit</button>
       </form>
     </div>
-    <div class="container m-3 p-3"></div>
-
+    <div class="container m-5 p-5"></div>
+    <div class="container m-5 p-5"></div>
     <footer class="footer">
       <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
     </footer>
