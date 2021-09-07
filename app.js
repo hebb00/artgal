@@ -29,9 +29,34 @@ app.use(
     saveUninitialized: true,
   })
 );
+var database = require("./routes/database");
+
+// apply this middleware only on routes that need user
+async function check(req, res, next) {
+  if (!req.session.user && req.cookies.user) {
+    req.session.user = req.cookies.user;
+  }
+  if (req.session.user) {
+    var user = req.session.user;
+    var userQuery = `SELECT id, name, profile_pic FROM users WHERE id = ${user.id}`;
+    try {
+      var { rows, rowCount } = await database.query(userQuery);
+    } catch (error) {
+      console.log(error);
+    }
+    if (rowCount > 0) {
+      res.locals = {
+        user: rows[0],
+      };
+      console.log("user in check", res.locals.user);
+      return next();
+    }
+  }
+  res.redirect("/login");
+}
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/users", check, usersRouter);
 app.use("/art", artRouter);
 
 // catch 404 and forward to error handler
