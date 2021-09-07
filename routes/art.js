@@ -1,25 +1,13 @@
 var express = require("express");
 var router = express.Router();
+var database = require("./database");
+var formidable = require("formidable");
+var fs = require("fs");
 
 /* GET users listing. */
 // router.get("/", function (req, res, next) {
 //   res.send("respond with a resource");
 // });
-
-router.get("/", function (req, res, next) {
-  if (req.session.user) {
-    res.locals.user = req.session.user;
-  } else {
-    res.locals.user = null;
-  }
-  res.render("articles", { title: "articles" });
-});
-
-router.get("/form", check, function (req, res, next) {
-  res.render("art-form", { title: "form" });
-});
-router.post("/form", async function (req, res, next) {});
-
 async function check(req, res, next) {
   if (!req.session.user && req.cookies.user) {
     req.session.user = req.cookies.user;
@@ -42,4 +30,19 @@ async function check(req, res, next) {
   }
   res.redirect("/login");
 }
+
+router.get("/", function (req, res, next) {
+  if (req.session.user) {
+    res.locals.user = req.session.user;
+  } else {
+    res.locals.user = null;
+  }
+  res.render("articles", { title: "articles" });
+});
+
+router.get("/form", check, function (req, res, next) {
+  res.render("art-form", { title: "form" });
+});
+router.post("/form", async function (req, res, next) {});
+
 module.exports = router;

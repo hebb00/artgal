@@ -3,10 +3,9 @@ var router = express.Router();
 var bcrypt = require("bcrypt");
 var database = require("./database");
 var formidable = require("formidable");
-
 var fs = require("fs");
+// const { delete } = require("../app");
 
-/* GET home page. */
 router.get("/", async function (req, res) {
   query = `SELECT id, name, type, path FROM images`;
   try {
@@ -14,15 +13,17 @@ router.get("/", async function (req, res) {
   } catch (error) {
     console.log(error);
   }
-  console.log(rows);
-
+  if (req.session.user) {
+    res.locals.user = req.session.user;
+  } else {
+    res.locals.user = null;
+  }
   res.render("index", { title: "explore", pics: rows });
 });
 
 router.get("/search", async function (req, res) {
   searchPics = req.flash("val");
   if (searchPics.length != 0) {
-    console.log(searchPics);
     pics = await searching(searchPics);
   }
 
@@ -49,32 +50,31 @@ router.post("/search", function (req, res) {
   res.redirect("/search");
 });
 
-router.get("/signup", function (req, res) {
+router.get("/signup", function (req, res, next) {
   res.render("signup", { title: "signup" });
 });
 
-router.post("/signup", async function (req, res) {
+router.post("/signup", async function (req, res, next) {
   var name = req.body.user;
   var email = req.body.email;
   var password = req.body.pass;
-  console.log(password);
+  var profile_pic = "images/pics/hiphop.jpeg";
   const hashedPass = bcrypt.hashSync(password, 10);
 
-  query = `INSERT INTO users(name, email, password)
-          VALUES('${name}', '${email}', '${hashedPass}')`;
+  query = `INSERT INTO users(name, email, password, profile_pic)
+          VALUES('${name}', '${email}', '${hashedPass}', '${profile_pic}')`;
 
   try {
     await database.query(query);
     result = await logIn(req.body);
     req.session.user = result;
-    console.log(req.session.user);
   } catch (error) {
     console.log(error);
   }
 
-  res.redirect("/login");
+  res.redirect("/users/profile");
 });
-router.get("/login", function (req, res) {
+router.get("/login", function (req, res, next) {
   invalid = req.query.invalid;
 
   if (invalid) {
@@ -82,11 +82,11 @@ router.get("/login", function (req, res) {
   }
   res.render("login", { title: "login", msg: msg });
 });
+
 router.post("/login", async function (req, res) {
   const check = req.body.check;
   data = await logIn(req.body);
   req.session.user = data;
-
   if (data) {
     if (check) {
       res.cookie("user", req.session.user);
@@ -94,15 +94,14 @@ router.post("/login", async function (req, res) {
   } else {
     res.redirect("/login?invalid=1");
   }
-  res.redirect("/profile");
+  res.redirect("/users/profile");
 });
 async function logIn(body) {
-  var email = body.email;
-  q = `SELECT id, name, password FROM users WHERE email = '${email}'`;
+  var userName = body.user;
+  q = `SELECT id, name, password, profile_pic FROM users WHERE name = '${userName}'`;
   rows = [];
   try {
     var { rows, rowCount } = await database.query(q);
-    console.log(rows);
 
     if (rowCount == 0) {
       return null;
@@ -118,21 +117,15 @@ async function logIn(body) {
     return null;
   }
 }
-router.get("/profile", async function (req, res) {
-  user = req.session.user;
-  console.log("profile", user);
-  query = `SELECT id, name, type, path FROM images WHERE user_id = ${user.id}`;
-  try {
-    var { rows } = await database.query(query);
-  } catch (error) {
-    console.log(error);
-  }
-  console.log(rows);
-  res.render("profile", {
-    title: "profile",
-    user: user,
-    pics: rows,
-  });
+
+router.get("/logout", function (req, res) {
+  req.session.destroy(function () {});
+  res.clearCookie("user");
+  console.log(res.locals.user);
+
+  res.locals.user = null;
+  console.log(res.locals.user);
+  res.redirect("/login");
 });
 
 router.get("/image/:id", async function (req, res) {
@@ -148,119 +141,26 @@ router.get("/image/:id", async function (req, res) {
   }
   console.log(rows);
   if (req.session.user) {
-    userid = req.session.user.id;
+    res.locals.user = req.session.user;
   } else {
-    userid = null;
+    res.locals.user = null;
   }
+
   res.render("image", {
     title: "image",
     photo: rows,
-    userid: userid,
   });
 });
 
-router.get("/logout", function (req, res) {
-  req.session.destroy(function () {
-    console.log("user logged out");
-  });
-  res.clearCookie("user");
-  res.redirect("/login");
-
-  res.render("logout", { title: "logout" });
-});
-
-router.get("/form", function (req, res, next) {
-  if (!req.session.user) {
-    res.redirect("/login");
-  }
-
-  res.render("form", { title: "upload" });
-});
-
-router.post("/form", function (req, res, next) {
-  form = new formidable.IncomingForm();
-  form.parse(req, async function (err, fields, files) {
-    picName = files.image.name;
-    console.log(picName);
-    oldPath = files.image.path;
-    console.log(oldPath);
-    console.log(req.session.user.id, "digital user");
-    newPath = "/home/heba/Desktop/myapp/artgal/public/images/pics/" + picName;
-    fs.rename(oldPath, newPath, function (err) {
-      if (err) throw err;
-    });
-    imgPath = "images/pics/" + picName;
-    console.log("new type selection", fields.type);
-
-    q = `INSERT INTO images (name, type, description, path, user_id)
-        VALUES($1, $2, $3, $4, $5)`;
-    try {
-      await database.query(q, [
-        fields.picName,
-        fields.type,
-        fields.description,
-        imgPath,
-        req.session.user.id,
-      ]);
-      info = `SELECT * FROM images WHERE name = '${fields.picName}' AND
-           user_id = '${req.session.user.id}'`;
-      rows = [];
-      try {
-        var { rows } = await database.query(info);
-        var picid = rows[0].id;
-        console.log(picid);
-      } catch (error) {
-        console.log(error);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    res.redirect("/image/" + picid);
-  });
-});
 router.post("/delete/:id", async function (req, res) {
   var id = req.params.id;
-  console.log(id, "deleted pic id");
   remove = `DELETE FROM images WHERE id = ${id} `;
   try {
     await database.query(remove);
   } catch (error) {
     console.log(error);
   }
-  res.redirect("/profile");
-});
-
-router.get("/edit/:id", async function (req, res) {
-  var id = req.params.id;
-  query = `SELECT id, name, type, path, description FROM images WHERE id = '${id}'`;
-  try {
-    var { rows } = await database.query(query);
-  } catch (error) {
-    console.log(error);
-  }
-  console.log(rows, "look for description");
-
-  res.render("edit", { title: "edit", img: rows, id: id });
-});
-
-router.post("/edit/:id", async function (req, res) {
-  var id = req.params.id;
-  console.log(id, "edit id");
-  var form = new formidable.IncomingForm();
-  form.parse(req, async function (err, fields, files) {
-    var newName = fields.picName;
-    var newType = fields.type;
-    var newDescription = fields.description;
-    console.log(newName, "my new name is");
-    update = `UPDATE images SET name = '${newName}', type = '${newType}',
-    description = '${newDescription}' WHERE id = ${id} `;
-    try {
-      await database.query(update);
-    } catch (error) {
-      console.log(error);
-    }
-    res.redirect("/image/" + id);
-  });
+  res.redirect("/users/profile");
 });
 
 module.exports = router;
