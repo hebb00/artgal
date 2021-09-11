@@ -6,9 +6,19 @@
   </head>
   <body style="background-color: #f5f5f5">
     <%- include ('partials/navbar'); -%>
-    <div class="container m-5"></div>
-    <footer class="footer">
-      <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
-    </footer>
+    <div class="blogs content">
+      <h2>all articles</h2>
+      <% if(articles.length>0){ for(var i = 0; i < articles.length; i++){ %>
+      <a class="single" href="/art/details/<%= articles[i].art_id %>">
+        <h3 class="title"><%= articles[i].title%></h3>
+        <p class="article"><%= articles[i].article%></p>
+      </a>
+      <% } }else{ %>
+      <p>there is no articles</p>
+      <% } %>
+    </div>
+    <div class="container m-5 p-5"></div>
+
+    <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
   </body>
 </html>

@@ -11,27 +11,29 @@
         class="myform m-5 p-5"
         enctype="multipart/form-data"
         method="POST"
-        action="/form"
+        action="/art/form"
       >
-        <label>Article Name </label>
+        <label> Title: </label>
         <input
           class="form-control"
           placeholder="name"
           type="name"
-          name="picName"
+          name="title"
         />
         <br />
         <label>Article:</label>
         <textarea
           class="form-control"
+          rows="5"
+          cols="10"
           placeholder="image description"
           type="text"
-          name="description"
+          name="article"
         ></textarea>
         <br />
 
         <div>
-          <label>Select image:</label>
+          <!-- <label>Select image:</label>
           <br />
 
           <input
@@ -40,14 +42,12 @@
             accept="image/*"
             name="image"
           />
-        </div>
+        </div> -->
         <button type="submit" id="log" class="btn btn-primary">ADD</button>
       </form>
     </div>
     <div class="container m-5 p-5"></div>
 
-    <footer class="footer">
       <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
-    </footer>
   </body>
 </html>

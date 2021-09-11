@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <%- include ('partials/head'); -%>
+  </head>
+  <body>
+    <%- include ('partials/navbar'); -%>
+    <div class="row">
+      <div class="col-5">
+        <form
+          class="myform m-5 p-5"
+          enctype="multipart/form-data"
+          method="POST"
+          action="/art/modify/<%= article.art_id %>"
+        >
+          <label>title </label>
+          <input
+            class="form-control"
+            value="<%= article.title %>"
+            type="text"
+            name="title"
+          />
+          <br />
+          <label>article :</label>
+          <textarea
+            class="form-control"
+            rows="5"
+            cols="10"
+            placeholder="image description"
+            type="text"
+            name="article"
+          >
+<%= article.article %></textarea
+          >
+          <div>
+            <button type="submit" id="log" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="container m-5 p-5"></div>
+
+    <footer class="footer">
+      <%- include ('partials/footer'); -%> <%- include ('partials/script'); -%>
+    </footer>
+  </body>
+</html>
