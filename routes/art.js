@@ -3,11 +3,9 @@ var router = express.Router();
 var database = require("./database");
 var formidable = require("formidable");
 var fs = require("fs");
+const { time } = require("console");
+const dayjs = require("dayjs");
 
-/* GET users listing. */
-// router.get("/", function (req, res, next) {
-//   res.send("respond with a resource");
-// });
 async function check(req, res, next) {
   if (!req.session.user && req.cookies.user) {
     req.session.user = req.cookies.user;
