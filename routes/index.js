@@ -24,18 +24,31 @@ router.get("/", async function (req, res) {
 });
 
 router.get("/search", async function (req, res) {
-  searchPics = req.flash("val");
-  if (searchPics.length != 0) {
-    pics = await searching(searchPics);
+  var searchPics = req.query.searchValue;
+  var choose = req.query.choose;
+  if (searchPics) {
+    pics = await searching(searchPics, choose);
   }
-
+  if (req.session.user) {
+    res.locals.user = req.session.user;
+  } else {
+    res.locals.user = null;
+  }
+  console.log("search get", pics);
   res.render("search", { title: "search", pics: pics });
 });
 
-async function searching(type) {
-  myquery = `SELECT images.id as id, images.path as path, images.name as name, users.name  FROM images JOIN users ON images.user_id = users.id WHERE
-           (type LIKE '%${type}%' OR images.name LIKE '%${type}%' OR description LIKE '% ${type}%' OR
-             users.name LIKE '%${type}%')`;
+async function searching(type, select) {
+  console.log("inside search function", select);
+  if (select === "img") {
+    myquery = `SELECT images.id as id, images.path as path, images.name as name, users.name  
+      FROM images JOIN users ON images.user_id = users.id WHERE
+      type LIKE '%${type}%' OR images.name LIKE '%${type}%' OR description LIKE '% ${type}%' OR
+      users.name LIKE '%${type}%' LIMIT 8`;
+  } else {
+    myquery = `SELECT art_id , title , article FROM articles WHERE title LIKE '%${type}%' OR article LIKE '%${type}%' LIMIT 8`;
+  }
+
   rows = [];
   try {
     var { rows } = await database.query(myquery);
@@ -47,9 +60,9 @@ async function searching(type) {
 }
 
 router.post("/search", function (req, res) {
-  console.log("post method search", req.body.searchValue);
-  req.flash("val", req.body.searchValue);
-  res.redirect("/search");
+  res.redirect(
+    `/search?choose=${req.body.choose}&searchValue=${req.body.searchValue}`
+  );
 });
 
 router.get("/signup", function (req, res, next) {

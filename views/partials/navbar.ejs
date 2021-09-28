@@ -28,6 +28,10 @@
         <!-- <% if(typeof user !== "undefined"){ %> <% } %> -->
       </ul>
       <form class="d-flex" method="POST" action="/search">
+        <select name="choose" class="form-control">
+          <option value="img">image</option>
+          <option value="articles">article</option>
+        </select>
         <input
           class="form-control me-2"
           type="search"
@@ -51,9 +55,15 @@
         >
           <%= locals.user.name %>
         </a>
-        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" href="/form">New Image</a></li>
-          <li><a class="dropdown-item" href="/art/form">New Article</a></li>
+        <ul
+          class="dropdown-menu"
+          aria-labelledby="navbarDropdown"
+          style="min-width: 7rem"
+        >
+          <li><a class="dropdown-item" href="/users/form">New Image</a></li>
+          <li>
+            <a class="dropdown-item" href="/art/article/form">New Article</a>
+          </li>
           <li><hr class="dropdown-divider" /></li>
           <li><a class="dropdown-item" href="/logout">log out</a></li>
         </ul>
