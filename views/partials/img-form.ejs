@@ -1,0 +1,21 @@
+<% if(user){ %>
+<form class="m-3" method="POST" action="/users/imgcomment/<%= articles%>">
+  <h2>Comments</h2>
+  <input
+    class="form-control"
+    type="text"
+    name="username"
+    value="<%=user.name%>"
+  />
+  <br />
+  <textarea
+    name="comment"
+    class="form-control"
+    placeholder="enter your comment here"
+  >
+  </textarea>
+  <br />
+
+  <button class="btn btn-primary" type="submit">Comment</button>
+</form>
+<%}%>

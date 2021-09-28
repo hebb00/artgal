@@ -5,10 +5,7 @@ var formidable = require("formidable");
 var fs = require("fs");
 const { time } = require("console");
 const dayjs = require("dayjs");
-
-// router.get("/", function (req, res, next) {
-//   res.send("respond with a resource");
-// });
+var querystring = require("querystring");
 
 router.get("/profile", async function (req, res, next) {
   if (res.locals.user) {
@@ -128,4 +125,36 @@ router.post("/edit/:id", async function (req, res) {
     res.redirect("/image/" + id);
   });
 });
+async function newComment(comment, id, res) {
+  var cmntQuery = `INSERT INTO comments(time, img_art_id, comment,user_id)
+    VALUES($1, $2, $3, $4)`;
+  try {
+    await database.query(cmntQuery, [
+      dayjs().format(),
+      id,
+      comment,
+      res.locals.user.id,
+    ]);
+  } catch (error) {
+    console.log(error);
+  }
+}
+router.post("/comment/:id", function (req, res) {
+  var comment = req.body.comment;
+  var name = req.body.username;
+  console.log(req.body);
+  var id = req.params.id;
+  newComment(comment, id, res);
+  console.log(req.query.articles, "true or false");
+  res.redirect(`/art/articles/article/${id}?comment=${comment}&name=${name}`);
+});
+
+router.post("/imgcomment/:id", async function (req, res) {
+  var comment = req.body.comment;
+  var name = req.body.username;
+  var id = req.params.id;
+  newComment(comment, id, res);
+  res.redirect(`/image/${id}`);
+});
+
 module.exports = router;

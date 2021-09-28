@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <%- include ('partials/script'); -%> <%- include ('partials/head'); -%>
+  </head>
+  <body>
+    <%- include ('partials/navbar'); -%>
+
+    <div class="article content">
+      <h1><%= article.title %></h1>
+      <div class="content">
+        <p><%= article.article %></p>
+      </div>
+      <% if(user){if ( user.id === article.user_id){%>
+      <form
+        style="display: inline"
+        method="POST"
+        action="/articles/delete/article/<%= article.art_id %>"
+      >
+        <button
+          class="btn btn-danger"
+          onclick="return confirm('are you sure you want to delete this article?')"
+        >
+          Delete
+        </button>
+      </form>
+      <a
+        href="/art/article/modify/<%= article.art_id %>"
+        class="btn btn-primary"
+        >Modify
+      </a>
+      <% }} %>
+    </div>
+    <%- include ('partials/comments'); -%> <%- include ('partials/form'); -%>
+
+    <div class="container m-5 p-5"></div>
+
+    <%- include ('partials/footer'); -%>
+  </body>
+</html>

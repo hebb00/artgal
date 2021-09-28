@@ -22,10 +22,12 @@
           <h2><%= photo[0].type %></h2>
           <h3>By: <%= photo[0].artistname %></h3>
           <p><%= photo[0].description%></p>
-          <% if(userid == photo[0].user_id){ %>
+          <% if(locals.user){if(locals.user.id === photo[0].user_id){ %>
 
           <br />
-          <a href="/edit/<%= photo[0].id%>" class="btn btn-primary">Modify </a>
+          <a href="/users/edit/<%= photo[0].id%>" class="btn btn-primary"
+            >Modify
+          </a>
           <button
             type="button"
             class="btn btn-danger"
@@ -34,7 +36,13 @@
           >
             Delete
           </button>
-          <% } %>
+          <% }} %>
+        </div>
+        <div class="row">
+          <div class="col-12"><%- include ('partials/img-form'); -%></div>
+        </div>
+        <div class="row m-2">
+          <div class="col-12"><%- include ('partials/comments'); -%></div>
         </div>
       </div>
     </div>

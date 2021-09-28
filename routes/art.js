@@ -78,9 +78,25 @@ router.get("/details/:id", async function (req, res, next) {
   } else {
     user = null;
   }
-  res.render("details", { title: "details", article: rows[0], user: user });
+  var qq = `SELECT *,name FROM comments JOIN users ON users.id = comments.user_id
+     WHERE img_art_id = ${id} LIMIT 5`;
+  try {
+    const { rows, rowCount } = await database.query(qq);
+    var comnt = rows;
+    var Count = rowCount;
+  } catch (error) {
+    console.log(error);
+  }
+  res.render("article", {
+    title: "article",
+    article: rows[0],
+    articles: rows[0].art_id,
+    user: user,
+    cmnt: comnt,
+    rowCount: Count,
+  });
 });
-router.post("/article/:id", async function (req, res, next) {
+router.post("/articles/delete/article/:id", async function (req, res, next) {
   var id = req.params.id;
   var del = `DELETE FROM articles WHERE art_id = ${id}`;
   try {
