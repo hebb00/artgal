@@ -4,19 +4,122 @@
     <title><%= title %></title>
     <%- include ('partials/head'); -%>
   </head>
-  <body style="background-color: #f5f5f5">
+  <body>
     <%- include ('partials/navbar'); -%>
 
-    <div
-      class="jumbotron jumbotron-fluid"
-      style="height: 150px; padding-bottom: 0%; margin-bottom: 0%"
+    <div id="jumb" class="container-fluid row">
+      <div id="jumbSon" class="container float-start col-2">
+        <img
+          id="profile"
+          class="rounded-circle img-fluid pt-2"
+          src="/<%= user.profile_pic %>"
+          alt="profile-pic"
+        />
+      </div>
+      <div id="jumbSon" class="container float-start col">
+        <a class="pt-5 mt-5" href="/users/profilePic/<%= user.id %>">Edit</a>
+      </div>
+    </div>
+    <!-- Nav tabs -->
+    <ul
+      class="nav nav-tabs justify-content-center nav-fill"
+      id="myTab"
+      role="tablist"
     >
-      <h1 class="m-3">MY GALLERY</h1>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link active"
+          id="home-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#home"
+          type="button"
+          role="tab"
+          aria-controls="home"
+          aria-selected="true"
+        >
+          My Gallery
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="profile"
+          data-bs-toggle="tab"
+          data-bs-target="#profile"
+          type="button"
+          role="tab"
+          aria-controls="profile"
+          aria-selected="false"
+        >
+          Favorites
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="messages-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#messages"
+          type="button"
+          role="tab"
+          aria-controls="messages"
+          aria-selected="false"
+        >
+          My Articles
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="settings-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#settings"
+          type="button"
+          role="tab"
+          aria-controls="settings"
+          aria-selected="false"
+        >
+          Settings
+        </button>
+      </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div
+        class="tab-pane active"
+        id="home"
+        role="tabpanel"
+        aria-labelledby="home-tab"
+      >
+        <%- include('partials/gallery'); -%>
+      </div>
+      <div
+        class="tab-pane"
+        id="profile"
+        role="tabpanel"
+        aria-labelledby="profile-tab"
+      >
+        hhhhhhhhh
+      </div>
+      <div
+        class="tab-pane"
+        id="messages"
+        role="tabpanel"
+        aria-labelledby="messages-tab"
+      >
+        ...
+      </div>
+      <div
+        class="tab-pane"
+        id="settings"
+        role="tabpanel"
+        aria-labelledby="settings-tab"
+      >
+        ...
+      </div>
     </div>
 
-    <%- include('partials/gallery'); -%>
-
-    <div class="container m-5 p-5"></div>
     <div class="container m-5 p-5"></div>
 
     <footer class="footer">

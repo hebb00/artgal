@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include ('partials/script'); -%> <%- include ('partials/head'); -%>
+    <title><%= title %></title>
+  </head>
+  <body>
+    <%- include ('partials/navbar'); -%>
+    <form
+      method="POST"
+      action="/users/profilePic/<%= id %>"
+      enctype="multipart/form-data"
+    >
+      <div class="mb-3">
+        <label for="formFile" class="form-label"
+          >select a profile picture</label
+        >
+        <input
+          class="frorm-control"
+          name="image"
+          type="file"
+          accept="image/*"
+          id="formFile"
+        />
+        <button type="submit">change</button>
+      </div>
+    </form>
+    <footer class="footer"><%- include ('partials/footer'); -%></footer>
+  </body>
+</html>
