@@ -6,3 +6,26 @@
 <script src="/javascripts/popper.min.js"></script>
 <script src="/javascripts/bootstrap.min.js"></script>
 <script src="/javascripts/ionicons.min.js"></script>
+<script>
+  var star = document.querySelectorAll(".star");
+  star.forEach(function (str) {
+    str.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.target.classList.toggle("icon-rotated");
+      e.target.src = "/images/star.png";
+      var id = e.target.id;
+      fetch(`/users/like/${id}`)
+        .then(function (res) {
+          return res.text().then((text) => {
+            console.log(text, "text in frontend");
+            like_id = "#like_" + id;
+            document.querySelector(like_id).innerHTML = text;
+          });
+        })
+        .catch(function (err) {
+          // There was an error
+          console.warn("Something went wrong.", err);
+        });
+    });
+  });
+</script>

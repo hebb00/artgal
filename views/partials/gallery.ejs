@@ -3,6 +3,17 @@
     <% for( i = 0; i < pics.length ; i++){ %>
     <div class="col-lg-3 col-md-3">
       <div class="thumbnail">
+        <img
+          class="star"
+          id="<%=pics[i].id %>"
+          src="/images/star_icon.png"
+          style="height: 30px; width: 30"
+        />
+        <span class="like p-10" id="like_<%= pics[i].id %>"></span>
+          <% for (j = 0; j< like.length; j++){if(like[j].id == pics[i].id){%>
+          <%=like[j].like_num %></span
+        >
+        <% }} %>
         <a href="/image/<%= pics[i].id %>">
           <img
             src="<%= pics[i].path %>"

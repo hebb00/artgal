@@ -20,7 +20,15 @@ router.get("/", async function (req, res) {
   } else {
     res.locals.user = null;
   }
-  res.render("index", { title: "explore", pics: rows });
+  var likes = `SELECT COUNT(likes.img_id) AS like_num, images.id FROM likes JOIN images ON
+    likes.img_id = images.id GROUP BY images.id`;
+  try {
+    const { rows } = await database.query(likes);
+    var like = rows;
+  } catch (error) {
+    console.log(error);
+  }
+  res.render("index", { title: "explore", pics: rows, like: like });
 });
 
 router.get("/search", async function (req, res) {

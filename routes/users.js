@@ -22,9 +22,19 @@ router.get("/profile", async function (req, res, next) {
   }
   console.log("user in profile ", user);
 
+  var likes = `SELECT COUNT(likes.img_id) AS like_num, images.id FROM likes JOIN images ON
+    likes.img_id = images.id GROUP BY images.id`;
+  try {
+    const { rows } = await database.query(likes);
+    var like = rows;
+  } catch (error) {
+    console.log(error);
+  }
+  console.log(like, "likes");
   res.render("profile", {
     title: "profile",
     pics: rows,
+    like: like,
   });
 });
 

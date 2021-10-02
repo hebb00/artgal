@@ -32,3 +32,16 @@ a {
 #dropdown {
   min-width: 7rem;
 }
+
+}
+@keyframes pulse {
+  50% {
+    transform: scale(2);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+.icon-rotated {
+  animation: pulse 0.5s 1 ease-in;
+}
