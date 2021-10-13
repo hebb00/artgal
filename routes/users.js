@@ -27,14 +27,36 @@ router.get("/profile", async function (req, res, next) {
   try {
     const { rows } = await database.query(likes);
     var like = rows;
+    console.log(like, "likes profile");
   } catch (error) {
     console.log(error);
   }
-  console.log(like, "likes");
+  var likesNum = [];
+  for (i = 0; i < 7; i++) {
+    for (var j = 0; j < like.length; j++) {
+      if (rows[i].id == like[j].id) {
+        likesNum[i] = like[j].like_num;
+        console.log(likesNum, "likes num");
+      }
+    }
+  }
+  var tes = [];
+  for (var i = 0; i < 7; i++) {
+    var test = ` SELECT * FROM likes WHERE img_id = ${rows[i].id} AND user_id = ${res.locals.user.id}`;
+    try {
+      let { rowCount } = await database.query(test);
+      tes[i] = rowCount;
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(tes, "testing tes in profile");
+  }
+  console.log(favorite, "favorite img");
   res.render("profile", {
     title: "profile",
     pics: rows,
-    like: like,
+    like: likesNum,
+    test: test,
   });
 });
 

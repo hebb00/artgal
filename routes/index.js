@@ -17,6 +17,18 @@ router.get("/", async function (req, res) {
   }
   if (req.session.user) {
     res.locals.user = req.session.user;
+    var tes = [];
+    for (var i = 0; i < 8; i++) {
+      var test = ` SELECT * FROM likes WHERE img_id = ${rows[i].id} AND user_id = ${res.locals.user.id}`;
+      try {
+        let { rowCount } = await database.query(test);
+        tes[i] = rowCount;
+      } catch (error) {
+        console.log(error);
+      }
+
+      console.log(tes, "testing tes in home");
+    }
   } else {
     res.locals.user = null;
   }
@@ -28,9 +40,23 @@ router.get("/", async function (req, res) {
   } catch (error) {
     console.log(error);
   }
-  res.render("index", { title: "explore", pics: rows, like: like });
-});
+  var likesNum = [];
+  for (i = 0; i < 8; i++) {
+    for (var j = 0; j < like.length; j++) {
+      if (rows[i].id == like[j].id) {
+        likesNum[i] = like[j].like_num;
+        console.log(likesNum, "likes num");
+      }
+    }
+  }
 
+  res.render("index", {
+    title: "explore",
+    pics: rows,
+    like: likesNum,
+    test: tes,
+  });
+});
 router.get("/search", async function (req, res) {
   var searchPics = req.query.searchValue;
   var choose = req.query.choose;
@@ -39,11 +65,47 @@ router.get("/search", async function (req, res) {
   }
   if (req.session.user) {
     res.locals.user = req.session.user;
+    var tes = [];
+    for (let i = 0; i < 8; i++) {
+      let test = ` SELECT * FROM likes WHERE img_id = ${pics[i].id} AND user_id = ${res.locals.user.id}`;
+      try {
+        let { rowCount } = await database.query(test);
+        tes[i] = rowCount;
+      } catch (error) {
+        console.log(error);
+      }
+
+      console.log(tes, "testing tes in home");
+    }
   } else {
     res.locals.user = null;
   }
+  var likes = `SELECT COUNT(likes.img_id) AS like_num, images.id FROM likes JOIN images ON
+  likes.img_id = images.id GROUP BY images.id `;
+  try {
+    const { rows } = await database.query(likes);
+    var like = rows;
+  } catch (error) {
+    console.log(error);
+  }
+  console.log(pics, "check pics ");
+
+  var likesNum = [];
+  for (i = 0; i < pics.length; i++) {
+    for (var j = 0; j < like.length; j++) {
+      if (pics[i].id == like[j].id) {
+        likesNum[i] = like[j].like_num;
+        console.log(likesNum, "likes num");
+      }
+    }
+  }
   console.log("search get", pics);
-  res.render("search", { title: "search", pics: pics });
+  res.render("search", {
+    title: "search",
+    pics: pics,
+    test: tes,
+    like: likesNum,
+  });
 });
 
 async function searching(type, select) {
@@ -184,6 +246,74 @@ router.post("/delete/:id", async function (req, res) {
     console.log(error);
   }
   res.redirect("/users/profile");
+});
+
+router.get("/like/:id", async function (req, res) {
+  if (req.session.user) {
+    res.locals.user = req.session.user;
+  } else {
+    res.locals.user = null;
+    res.redirect("/login");
+    return;
+  }
+  var id = req.params.id;
+  console.log(id);
+  console.log(res.locals.user);
+  var test = ` SELECT * FROM likes WHERE img_id = ${id} AND user_id = ${res.locals.user.id}`;
+  try {
+    let { rowCount } = await database.query(test);
+    var tes = rowCount;
+  } catch (error) {
+    console.log(error);
+  }
+  if (tes == 0) {
+    var into = `INSERT INTO likes(user_id, img_id, art_id)
+    VALUES(${res.locals.user.id}, ${id}, NULL)`;
+    try {
+      await database.query(into);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  var text = `SELECT COUNT(img_id) AS likes_num FROM likes WHERE img_id = ${id}`;
+  try {
+    let { rows } = await database.query(text);
+    var num = rows;
+  } catch (error) {
+    console.log(error);
+  }
+  var likes = num[0].likes_num;
+  console.log(likes);
+  res.send("" + likes);
+});
+
+router.get("/unlike/:id", async function (req, res) {
+  var id = req.params.id;
+  if (req.session.user) {
+    res.locals.user = req.session.user;
+  } else {
+    res.locals.user = null;
+    res.redirect("/login");
+    return;
+  }
+  var del = `DELETE FROM likes WHERE img_id = ${id} AND user_id = ${res.locals.user.id}`;
+  try {
+    await database.query(del);
+  } catch (error) {
+    console.log(error);
+  }
+
+  let text = `SELECT COUNT(img_id) AS likes_num FROM likes WHERE img_id = ${id}`;
+  try {
+    let { rows } = await database.query(text);
+    var numb = rows;
+  } catch (error) {
+    console.log(error);
+  }
+  let likes = numb[0].likes_num;
+  console.log(likes);
+  res.send("" + likes);
 });
 
 module.exports = router;

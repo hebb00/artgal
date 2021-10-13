@@ -12,20 +12,39 @@
     str.addEventListener("click", (e) => {
       e.preventDefault();
       e.target.classList.toggle("icon-rotated");
-      e.target.src = "/images/star.png";
       var id = e.target.id;
-      fetch(`/users/like/${id}`)
-        .then(function (res) {
-          return res.text().then((text) => {
-            console.log(text, "text in frontend");
-            like_id = "#like_" + id;
-            document.querySelector(like_id).innerHTML = text;
+      if (check) {
+        fetch(`/like/${id}`)
+          .then(function (res) {
+            check = false;
+            return res.text().then((text) => {
+              console.log(text, "text in frontend");
+              like_id = "#like_" + id;
+              document.querySelector(like_id).innerHTML = text;
+              e.target.src = "/images/star.png";
+            });
+          })
+          .catch(function (err) {
+            // There was an error
+            cons        });
+      } else {
+        // e.target.src = "/images/star_icon.png";
+        fetch(`/unlike/${id}`)
+          .then(function (res) {
+            check = true;
+            return res.text().then((text) => {
+              console.log(text, "text in frontend unlike");
+              like_id = "#like_" + id;
+              document.querySelector(like_id).innerHTML = text;
+              e.target.src = "/images/star_icon.png";
+            });
+          })
+          .catch(function (err) {
+            // There was an error
+            console.warn("Something went wrong.", err);
           });
-        })
-        .catch(function (err) {
-          // There was an error
-          console.warn("Something went wrong.", err);
-        });
-    });
+      }
+    });ole.warn("Something went wrong.", err);
+  
   });
 </script>
