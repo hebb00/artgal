@@ -57,48 +57,53 @@ router.get("/", async function (req, res) {
     test: tes,
   });
 });
+
 router.get("/search", async function (req, res) {
   var searchPics = req.query.searchValue;
   var choose = req.query.choose;
+  var pics = "";
   if (searchPics) {
     pics = await searching(searchPics, choose);
   }
   if (req.session.user) {
     res.locals.user = req.session.user;
-    var tes = [];
-    for (let i = 0; i < 8; i++) {
-      let test = ` SELECT * FROM likes WHERE img_id = ${pics[i].id} AND user_id = ${res.locals.user.id}`;
+    if (pics) {
+      var tes = [];
+      for (let i = 0; i < pics.length; i++) {
+        let test = ` SELECT * FROM likes WHERE img_id = ${pics[i].id} AND user_id = ${res.locals.user.id}`;
+        try {
+          let { rowCount } = await database.query(test);
+          tes[i] = rowCount;
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      var likes = `SELECT COUNT(likes.img_id) AS like_num, images.id FROM likes JOIN images ON
+     likes.img_id = images.id GROUP BY images.id `;
       try {
-        let { rowCount } = await database.query(test);
-        tes[i] = rowCount;
+        const { rows } = await database.query(likes);
+        var like = rows;
       } catch (error) {
         console.log(error);
       }
+
+      var likesNum = [];
+      for (i = 0; i < pics.length; i++) {
+        for (var j = 0; j < like.length; j++) {
+          if (pics[i].id == like[j].id) {
+            likesNum[i] = like[j].like_num;
+          }
+        }
+      }
+      console.log(likesNum, "likes num");
 
       console.log(tes, "testing tes in home");
     }
   } else {
     res.locals.user = null;
   }
-  var likes = `SELECT COUNT(likes.img_id) AS like_num, images.id FROM likes JOIN images ON
-  likes.img_id = images.id GROUP BY images.id `;
-  try {
-    const { rows } = await database.query(likes);
-    var like = rows;
-  } catch (error) {
-    console.log(error);
-  }
-  console.log(pics, "check pics ");
 
-  var likesNum = [];
-  for (i = 0; i < pics.length; i++) {
-    for (var j = 0; j < like.length; j++) {
-      if (pics[i].id == like[j].id) {
-        likesNum[i] = like[j].like_num;
-        console.log(likesNum, "likes num");
-      }
-    }
-  }
   console.log("search get", pics);
   res.render("search", {
     title: "search",
