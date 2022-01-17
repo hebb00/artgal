@@ -4,14 +4,14 @@
     <title><%= title %></title>
     <%- include ('partials/head'); -%>
   </head>
-  <body style="background-color: #f5f5f5">
+  <bod>
     <%- include ('partials/navbar'); -%>
     <div class="container w-50">
       <form
         class="myform m-5 p-5"
         enctype="multipart/form-data"
         method="POST"
-        action="/form"
+        action="/users/form"
       >
         <label>Name </label>
         <input
@@ -25,7 +25,7 @@
         <select name="type" class="form-control">
           <option value="sketch">sketch</option>
           <option value="oil painting">oil painting</option>
-          <option value="digital art">digital art</option>
+          <option value="digital articles">digital articles</option>
           <option value="other">other</option>
         </select>
         <br />

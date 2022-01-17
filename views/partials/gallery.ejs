@@ -1,44 +1,42 @@
 <div class="gallery container mx-auto mt-5">
   <div class="row text-left">
-    <% for( i = 0; i < pics.length ; i++){ %>
-    <div class="col-lg-3 col-md-3">
-      <div class="thumbnail">
+    <% for( i = 0; i < pics.length; i++){ %>
+    <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+      <div class="thumbnail m-3">
+        <a class="zoom" href="/image/<%= pics[i].id %> ">
+          <img
+            id="pic"
+            src="/<%= pics[i].path %>"
+            class="img-thumbnail img-fluid mb-4"
+            alt="pic"
+          />
+        </a>
         <%if(locals.user){ %> <% if(test[i] == 1){%>
         <script>
           check = false;
         </script>
-        <img
-          class="star"
-          id="<%=pics[i].id %>"
-          src="/images/star.png"
-          style="height: 30px; width: 30"
-        />
-        <span class="like p-10" id="like_<%= pics[i].id %>"> <%=like[i]%></span>
+        <div class="gallery-shadow">
+          <img class="star" id="<%=pics[i].id %>" src="/images/star.png" />
+          <span class="like p-10" id="like_<%= pics[i].id %>">
+            <%=like[i]%></span
+          >
+        </div>
 
         <%}else{%>
-        <img
-          class="star"
-          id="<%=pics[i].id %>"
-          src="/images/star_icon.png"
-          style="height: 30px; width: 30"
-        />
+        <div class="gallery-shadow">
+          <img class="star" id="<%=pics[i].id %>" src="/images/star_icon.png" />
+          <span class="like p-10" id="like_<%= pics[i].id %>"
+            ><%=like[i]%></span
+          >
+        </div>
+
         <script>
           check = true;
         </script>
-        <span class="like p-10" id="like_<%= pics[i].id %>"><%=like[i]%></span>
-        <%}}%>
 
-        <a href="/image/<%= pics[i].id %>">
-          <img
-            src="<%= pics[i].path %>"
-            class="img-thumbnail img-fluid mb-4"
-            alt="pic"
-            style="height: 300px; object-fit: cover"
-          />
-        </a>
+        <%}}%>
       </div>
     </div>
-
-    <% } %>
+    <%} %>
   </div>
 </div>

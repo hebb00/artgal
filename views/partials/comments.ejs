@@ -1,6 +1,19 @@
-<% if(rowCount != 0){for(var i = 0; i < cmnt.length; i++){
-if(cmnt[i].comment){%>
-<h3><%= cmnt[i].name %></h3>
-<p><%= cmnt[i].comment %></p>
+<div class="comment">
+  <% if(rowCount != 0){for(var i = 0; i < cmnt.length; i++){
+  if(cmnt[i].comment){%>
+  <div class="comment-heading">
+    <div class="comment-info">
+      <a href="#" class="comment-author"><%= cmnt[i].name %></a>
+      <p><%= time[i] %></p>
+    </div>
+  </div>
+  <div class="comment-body">
+    <p><%= cmnt[i].comment %></p>
+    <!-- <button type="button">Reply</button>
+    <button type="button">Flag</button> -->
+  </div>
 
-<%}}}%>
+  <hr />
+
+  <%}}}%>
+</div>

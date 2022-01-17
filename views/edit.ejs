@@ -4,7 +4,7 @@
     <title><%= title %></title>
     <%- include ('partials/head'); -%>
   </head>
-  <body style="background-color: #f5f5f5">
+  <body>
     <%- include ('partials/navbar'); -%>
     <div class="row">
       <div class="col-5 m-5">
@@ -27,7 +27,7 @@
           class="myform m-5 p-5"
           enctype="multipart/form-data"
           method="POST"
-          action="/edit/<%= id %>"
+          action="/users/edit/<%= id %>"
         >
           <label>Name </label>
           <input

@@ -7,12 +7,25 @@
   <body style="background-color: #f5f5f5">
     <%- include ('partials/navbar'); -%>
     <div class="blogs content">
-      <h2>all articles</h2>
       <% if(articles.length>0){ for(var i = 0; i < articles.length; i++){ %>
-      <a class="single" href="/art/details/<%= articles[i].art_id %>">
+      <div class="single">
+        <!-- <img src="/images/pics/bird.jpeg" alt="article pic" /> -->
         <h3 class="title"><%= articles[i].title%></h3>
-        <p class="article"><%= articles[i].article%></p>
-      </a>
+        <p class="" id="arti"><%= articles[i].article%></p>
+
+        <a
+          style="float: right"
+          href="/art/articles/<%= articles[i].art_id %>"
+          class="btn btn-default"
+          >read more</a
+        >
+        <span><%= articles[i].date%></span>
+        <%if(num[i]){if(articles[i].art_id == num[i].img_art_id)%>
+        <span> <%= num[i].c_num%> comments</span>
+        <%}%>
+        <span>written by: <%= articles[i].name%> </span>
+      </div>
+
       <% } }else{ %>
       <p>there is no articles</p>
       <% } %>

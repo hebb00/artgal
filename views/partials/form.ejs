@@ -1,6 +1,6 @@
 <% if(user){ %>
 
-<form class="m-3" method="POST" action="/users/comment/<%= articles%>">
+<form class="" method="POST" action="/users/comment/<%= articles%>">
   <h2>Comments</h2>
   <input
     class="form-control"
@@ -17,7 +17,7 @@
   </textarea>
   <br />
 
-  <button class="btn btn-primary" type="submit">Comment</button>
+  <button class="btn btn-default" type="submit">Comment</button>
 </form>
 
 <%}%>

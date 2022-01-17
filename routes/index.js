@@ -6,10 +6,10 @@ var formidable = require("formidable");
 var fs = require("fs");
 const { time } = require("console");
 const dayjs = require("dayjs");
+// var querystring = require("querystring");
 // const { delete } = require("../app");
-
 router.get("/", async function (req, res) {
-  query = `SELECT id, name, type, path FROM images`;
+  query = `SELECT id, name, type, path FROM images ORDER BY id DESC LIMIT 8`;
   try {
     var { rows } = await database.query(query);
   } catch (error) {
@@ -18,7 +18,7 @@ router.get("/", async function (req, res) {
   if (req.session.user) {
     res.locals.user = req.session.user;
     var tes = [];
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < rows.length; i++) {
       var test = ` SELECT * FROM likes WHERE img_id = ${rows[i].id} AND user_id = ${res.locals.user.id}`;
       try {
         let { rowCount } = await database.query(test);
@@ -33,7 +33,7 @@ router.get("/", async function (req, res) {
     res.locals.user = null;
   }
   var likes = `SELECT COUNT(likes.img_id) AS like_num, images.id FROM likes JOIN images ON
-    likes.img_id = images.id GROUP BY images.id`;
+    likes.img_id = images.id GROUP BY images.id `;
   try {
     const { rows } = await database.query(likes);
     var like = rows;
@@ -41,7 +41,7 @@ router.get("/", async function (req, res) {
     console.log(error);
   }
   var likesNum = [];
-  for (i = 0; i < 8; i++) {
+  for (i = 0; i < rows.length; i++) {
     for (var j = 0; j < like.length; j++) {
       if (rows[i].id == like[j].id) {
         likesNum[i] = like[j].like_num;
@@ -123,11 +123,10 @@ async function searching(type, select) {
   } else {
     myquery = `SELECT art_id , title , article FROM articles WHERE title LIKE '%${type}%' OR article LIKE '%${type}%' LIMIT 8`;
   }
-
-  rows = [];
   try {
-    var { rows } = await database.query(myquery);
+    let { rows } = await database.query(myquery);
     var myPic = rows;
+    console.log(myPic, "my pic");
   } catch (error) {
     console.log(error);
   }
@@ -220,25 +219,63 @@ router.get("/logout", function (req, res) {
 
 router.get("/image/:id", async function (req, res) {
   var id = req.params.id;
-  console.log("its the pic params", req);
   pic = `SELECT images.id, images.name, type, path, user_id, users.name as artistName, users.id as userid FROM images join users ON
        users.id = images.user_id WHERE images.id = '${id}'`;
-  rows = [];
   try {
-    var { rows } = await database.query(pic);
+    const { rows, rowCount } = await database.query(pic);
+    var count = rowCount;
+    var photo = rows;
   } catch (error) {
     console.log(error);
   }
-  console.log(rows);
   if (req.session.user) {
     res.locals.user = req.session.user;
+    var name = res.locals.user.name;
+    if (count != 0) {
+      var test = ` SELECT * FROM likes WHERE img_id = ${id} AND user_id = ${res.locals.user.id}`;
+      try {
+        let { rowCount } = await database.query(test);
+        var tes = rowCount;
+      } catch (error) {
+        console.log(error);
+      }
+      console.log(tes, "testing tes in image");
+    }
   } else {
     res.locals.user = null;
+  }
+  var comment = req.query.comment;
+
+  var imgId = photo[0].id;
+  var comnt = `SELECT c_id, time, img_art_id, comment ,name FROM comments INNER JOIN users ON comments.user_id = users.id
+     WHERE img_art_id = ${imgId} ORDER BY comments.c_id LIMIT 5 `;
+  try {
+    var { rows, rowCount } = await database.query(comnt);
+    var cmnt = rows;
+    var time = [];
+    for (var i = 0; i < cmnt.length; i++) {
+      time[i] = dayjs(cmnt[i].time).format("DD/MM/YYYY");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  var star = ` SELECT COUNT (img_id) AS num FROM likes WHERE img_id = ${id} `;
+  try {
+    let { rows } = await database.query(star);
+    var Like = rows[0];
+  } catch (error) {
+    console.log(error);
   }
 
   res.render("image", {
     title: "image",
-    photo: rows,
+    photo: photo,
+    articles: photo[0].id,
+    cmnt: cmnt,
+    time: time,
+    like: Like,
+    test: tes,
+    rowCount: rowCount,
   });
 });
 

@@ -10,20 +10,33 @@ var querystring = require("querystring");
 router.get("/profile", async function (req, res, next) {
   if (res.locals.user) {
     user = res.locals.user;
+    query = `SELECT id, name, type, path
+    FROM images WHERE user_id =' ${user.id}'ORDER BY id DESC LIMIT 8`;
+    try {
+      var { rows, rowCount } = await database.query(query);
+    } catch (error) {
+      console.log(error);
+    }
+    if (rowCount != 0) {
+      var tes = [];
+      for (var i = 0; i < rows.length; i++) {
+        var test = ` SELECT * FROM likes WHERE img_id = ${rows[i].id} AND user_id = ${user.id}`;
+        try {
+          let { rowCount } = await database.query(test);
+          tes[i] = rowCount;
+        } catch (error) {
+          console.log(error);
+        }
+        console.log(tes, "testing tes in profile");
+      }
+    }
   } else {
     user = null;
   }
-  query = `SELECT id, name, type, path
-    FROM images WHERE user_id =' ${user.id}'`;
-  try {
-    var { rows } = await database.query(query);
-  } catch (error) {
-    console.log(error);
-  }
-  console.log("user in profile ", user);
+  console.log("getting the user imgs", rows);
 
-  var likes = `SELECT COUNT(likes.img_id) AS like_num, images.id FROM likes JOIN images ON
-    likes.img_id = images.id GROUP BY images.id`;
+  var likes = `SELECT COUNT (likes.img_id) AS num, images.id FROM likes JOIN images ON
+  likes.img_id = images.id WHERE images.user_id = ${user.id} GROUP BY images.id`;
   try {
     const { rows } = await database.query(likes);
     var like = rows;
@@ -31,32 +44,46 @@ router.get("/profile", async function (req, res, next) {
   } catch (error) {
     console.log(error);
   }
-  var likesNum = [];
-  for (i = 0; i < 7; i++) {
-    for (var j = 0; j < like.length; j++) {
-      if (rows[i].id == like[j].id) {
-        likesNum[i] = like[j].like_num;
-        console.log(likesNum, "likes num");
-      }
-    }
+  console.log(like, "likes in profile");
+  var fav = `SELECT  type, path, description,images.user_id,images.id FROM likes JOIN
+     images ON likes.img_id = images.id WHERE likes.user_id = ${user.id}`;
+  try {
+    const { rows } = await database.query(fav);
+    var favorite = rows;
+  } catch (error) {
+    console.log(error);
   }
-  var tes = [];
-  for (var i = 0; i < 7; i++) {
-    var test = ` SELECT * FROM likes WHERE img_id = ${rows[i].id} AND user_id = ${res.locals.user.id}`;
-    try {
-      let { rowCount } = await database.query(test);
-      tes[i] = rowCount;
-    } catch (error) {
-      console.log(error);
+
+  var art = ` SELECT * FROM articles WHERE user_id =  ${user.id}`;
+  try {
+    let { rows } = await database.query(art);
+    var article = rows;
+    var dayFormat = [];
+    for (var i = 0; i < article.length; i++) {
+      dayFormat[i] = dayjs(article[i].date).format("DD/MM/YYYY");
+      article[i].date = dayFormat[i];
     }
-    console.log(tes, "testing tes in profile");
+  } catch (error) {
+    console.log(error);
   }
-  console.log(favorite, "favorite img");
+  let count = `SELECT COUNT(c_id) AS c_num, img_art_id FROM comments JOIN articles 
+  ON comments.img_art_id = articles.art_id 
+   GROUP BY img_art_id`;
+  try {
+    let { rows } = await database.query(count);
+    var numOfcomnt = rows;
+  } catch (error) {
+    console.log(error);
+  }
+  console.log(article, "articles");
   res.render("profile", {
     title: "profile",
     pics: rows,
-    like: likesNum,
-    test: test,
+    like: like,
+    favorite: favorite,
+    test: tes,
+    articles: article,
+    num: numOfcomnt,
   });
 });
 
@@ -126,7 +153,14 @@ router.post("/profilePic/:id", function (req, res, next) {
 });
 router.get("/profilePic/:id", async function (req, res, next) {
   var id = req.params.id;
-  res.render("profilePic", { title: "profile_pic", id: id });
+  var pic = `SELECT profile_pic FROM users WHERE id = ${id} `;
+  try {
+    var { rows } = await database.query(pic);
+  } catch (error) {
+    console.log(error);
+  }
+  console.log("profile picture", rows);
+  res.render("profilePic", { title: "profile_pic", id: id, img: rows[0] });
 });
 router.get("/edit/:id", async function (req, res) {
   var id = req.params.id;
@@ -178,7 +212,7 @@ router.post("/comment/:id", function (req, res) {
   var id = req.params.id;
   newComment(comment, id, res);
   console.log(req.query.articles, "true or false");
-  res.redirect(`/art/articles/article/${id}?comment=${comment}&name=${name}`);
+  res.redirect(`/art/articles/${id}?comment=${comment}&name=${name}`);
 });
 
 router.post("/imgcomment/:id", async function (req, res) {
@@ -188,5 +222,28 @@ router.post("/imgcomment/:id", async function (req, res) {
   newComment(comment, id, res);
   res.redirect(`/image/${id}`);
 });
+
+// router.get("/unlike/:id", async function (req, res) {
+//   let id = req.params.id;
+//   var unlike = ` DELETE FROM likes WHERE img_id =${id}AND user_id = ${res.locals.user.id}`;
+//   try {
+//     await database.query(unlike);
+//   } catch (error) {
+//     console.log(error);
+//   }
+
+//   var info = `SELECT COUNT(img_id) AS likes_num FROM likes WHERE img_id = ${id}`;
+//   try {
+//     let { rows, rowCount } = await database.query(info);
+//     var unlikes = rows[0].likes_num;
+//     if (rowCount == 0) {
+//       rows.likes_num = null;
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+//   console.log(unlikes, "unlike");
+//   res.send("" + unlikes);
+// });
 
 module.exports = router;

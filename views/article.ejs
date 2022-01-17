@@ -7,32 +7,63 @@
   <body>
     <%- include ('partials/navbar'); -%>
 
-    <div class="article content">
-      <h1><%= article.title %></h1>
-      <div class="content">
-        <p><%= article.article %></p>
+    <div class="row">
+      <div
+        style="
+          background-image: url(/images/pics/art.webp);
+          height: 200px;
+          padding-bottom: 0%;
+          margin-bottom: 0%;
+        "
+        class="container-fluid"
+      ></div>
+      <div class="col-lg-7 col-sm-11">
+        <div class="article content">
+          <h1 class="text-center"><%= article.title %></h1>
+          <div class="content p-2">
+            <p><%= article.article %></p>
+          </div>
+        </div>
       </div>
-      <% if(user){if ( user.id === article.user_id){%>
-      <form
-        style="display: inline"
-        method="POST"
-        action="/articles/delete/article/<%= article.art_id %>"
-      >
-        <button
-          class="btn btn-danger"
-          onclick="return confirm('are you sure you want to delete this article?')"
-        >
-          Delete
-        </button>
-      </form>
-      <a
-        href="/art/article/modify/<%= article.art_id %>"
-        class="btn btn-primary"
-        >Modify
-      </a>
-      <% }} %>
+      <div class="col-lg-4 col-sm-10" id="coll">
+        <div class="row mt-5">
+          <table>
+            <% if(user){if ( user.id === article.user_id){%>
+
+            <tr>
+              <td class="d-flex">
+                <a
+                  style="flex-grow: 1"
+                  href="/art/article/modify/<%= article.art_id %>"
+                  class="btn btn-default"
+                  >Modify Article
+                </a>
+              </td>
+              <td>
+                <form
+                  class="d-flex"
+                  method="POST"
+                  action="/articles/delete/article/<%= article.art_id %>"
+                >
+                  <button
+                    style="flex-grow: 1"
+                    class="btn btn-danger"
+                    onclick="return confirm('are you sure you want to delete this article?')"
+                  >
+                    Delete Article
+                  </button>
+                </form>
+              </td>
+            </tr>
+            <% }} %>
+          </table>
+        </div>
+        <div class="row">
+          <div><%- include ('partials/comments'); -%></div>
+        </div>
+        <div class="row"><%- include ('partials/form'); -%></div>
+      </div>
     </div>
-    <%- include ('partials/comments'); -%> <%- include ('partials/form'); -%>
 
     <div class="container m-5 p-5"></div>
 

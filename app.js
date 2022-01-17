@@ -54,7 +54,6 @@ async function check(req, res, next) {
   }
   res.redirect("/login");
 }
-
 app.use("/", indexRouter);
 app.use("/users", check, usersRouter);
 app.use("/art", artRouter);

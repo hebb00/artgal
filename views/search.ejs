@@ -13,10 +13,16 @@
     <% if (pics.length > 0){ if(pics[0].art_id){ %>
     <div class="blogs content">
       <% for(var i = 0; i < pics.length; i++){ %>
-      <a class="single" href="/articles/article/<%= pics[i].art_id %>">
+      <div class="single">
         <h3 class="title"><%= pics[i].title%></h3>
-        <p class="article"><%= pics[i].article%></p>
-      </a>
+        <p class="" id="arti"><%= pics[i].article%></p>
+        <a
+          style="float: right"
+          href="/articles/article/<%= pics[i].art_id %>"
+          class="btn btn-default"
+          >read more</a
+        >
+      </div>
       <% } %>
     </div>
     <%}else{ %> <%- include('partials/gallery'); -%> <% }} %>

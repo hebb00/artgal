@@ -5,7 +5,8 @@ var formidable = require("formidable");
 var fs = require("fs");
 const { time } = require("console");
 const dayjs = require("dayjs");
-
+var customParseFormat = require("dayjs/plugin/customParseFormat");
+dayjs.extend(customParseFormat);
 async function check(req, res, next) {
   if (!req.session.user && req.cookies.user) {
     req.session.user = req.cookies.user;
@@ -29,61 +30,95 @@ async function check(req, res, next) {
   res.redirect("/login");
 }
 
-router.get("/", async function (req, res, next) {
+router.get("/articles", async function (req, res, next) {
   if (req.session.user) {
     res.locals.user = req.session.user;
   } else {
     res.locals.user = null;
   }
-  var data = `SELECT * FROM articles `;
+  var data = `SELECT *,users.name FROM articles JOIN users ON
+     users.id = articles.user_id LIMIT 8 `;
   try {
     var { rows } = await database.query(data);
+    var dayFormat = [];
+    for (var i = 0; i < rows.length; i++) {
+      dayFormat[i] = dayjs(rows[i].date).format("DD/MM/YYYY");
+      rows[i].date = dayFormat[i];
+    }
   } catch (error) {
     console.log(error);
   }
+  //   The JavaScript specification gives exactly one proper way to determine the class of an object:
 
-  res.render("articles", { title: "articles", articles: rows });
+  // Object.prototype.toString.call(t);
+  //   console.log(" date", Object.prototype.toString.call(rows[0].date));
+  let count = `SELECT COUNT(c_id) AS c_num, img_art_id FROM comments JOIN articles 
+    ON comments.img_art_id = articles.art_id 
+     GROUP BY img_art_id`;
+  try {
+    let { rows } = await database.query(count);
+    var numOfcomnt = rows;
+  } catch (error) {
+    console.log(error);
+  }
+  console.log(numOfcomnt, "num of comnt");
+  console.log(dayjs(rows[0].date).format("DD/MM/YYYY"));
+  res.render("articles", {
+    title: "articles",
+    articles: rows,
+    num: numOfcomnt,
+  });
 });
 
-router.get("/form", check, function (req, res, next) {
-  res.render("art-form", { title: "form" });
+router.get("/article/form", check, function (req, res, next) {
+  res.render("articles-form", { title: "form" });
 });
-router.post("/form", check, async function (req, res, next) {
+router.post("/article/form", check, async function (req, res, next) {
   var form = new formidable.IncomingForm();
   form.parse(req, async function (err, fields, files) {
     var title = fields.title;
     var article = fields.article;
-    var query = `INSERT INTO articles (title,article,user_id )
-          VALUES($1, $2, $3)`;
+    var query = `INSERT INTO articles (title, article, user_id, date )
+          VALUES($1, $2, $3, $4)`;
     try {
-      await database.query(query, [title, article, res.locals.user.id]);
+      await database.query(query, [
+        title,
+        article,
+        res.locals.user.id,
+        dayjs().format(),
+      ]);
     } catch (error) {
       console.log(error);
     }
   });
-  res.redirect("/art/");
+  res.redirect("/art/articles");
 });
 
-router.get("/details/:id", async function (req, res, next) {
+router.get("/articles/:id", async function (req, res, next) {
   var id = req.params.id;
+
   var get = ` SELECT * FROM articles WHERE art_id = ${id}`;
   try {
     var { rows } = await database.query(get);
   } catch (error) {
     console.log(error);
   }
-  console.log("details", rows);
+  console.log("article", rows);
   if (req.session.user) {
     var user = req.session.user;
   } else {
     user = null;
   }
   var qq = `SELECT *,name FROM comments JOIN users ON users.id = comments.user_id
-     WHERE img_art_id = ${id} LIMIT 5`;
+     WHERE img_art_id = ${id} ORDER BY c_id  LIMIT 5`;
   try {
     const { rows, rowCount } = await database.query(qq);
     var comnt = rows;
     var Count = rowCount;
+    var time = [];
+    for (var i = 0; i < Count; i++) {
+      time[i] = dayjs(comnt[i].time).format("DD/MM/YYYY");
+    }
   } catch (error) {
     console.log(error);
   }
@@ -93,6 +128,7 @@ router.get("/details/:id", async function (req, res, next) {
     articles: rows[0].art_id,
     user: user,
     cmnt: comnt,
+    time: time,
     rowCount: Count,
   });
 });
@@ -105,10 +141,10 @@ router.post("/articles/delete/article/:id", async function (req, res, next) {
     console.log(error);
   }
   console.log("deleted");
-  res.redirect("/art/");
+  res.redirect("/art/articles");
 });
 
-router.post("/modify/:id", async function (req, res, next) {
+router.post("/article/modify/:id", async function (req, res, next) {
   var id = req.params.id;
   var form = new formidable.IncomingForm();
   form.parse(req, async function (err, fields, files) {
@@ -122,11 +158,11 @@ router.post("/modify/:id", async function (req, res, next) {
       console.log(error);
     }
     console.log("deleted");
-    res.redirect("/art/");
+    res.redirect("/articles");
   });
 });
 
-router.get("/modify/:id", check, async function (req, res, next) {
+router.get("/article/modify/:id", check, async function (req, res, next) {
   var id = req.params.id;
   query = `SELECT art_id, title, article FROM articles WHERE art_id = '${id}'`;
   try {
